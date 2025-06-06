@@ -2,6 +2,10 @@ from pydantic_settings import BaseSettings
 from pydantic import BaseModel
 
 
+class JWTConfig(BaseModel):
+    algorithm: str = "HS256"
+    secret_key: str = "gV64m9aIzFG4qpgVphvQbPQrtAO0nM-7YwwOvu0XPt5KJOjAy4AfgLkqJXYEt"
+
 class RunConfig(BaseModel):
     host: str = "0.0.0.0"
     port: int = 8000
@@ -16,6 +20,7 @@ class DBConfig(BaseModel):
 class Settings(BaseSettings):
     db: DBConfig = DBConfig()
     run: RunConfig = RunConfig()
+    jwt: JWTConfig = JWTConfig()
 
 
 config = Settings()
