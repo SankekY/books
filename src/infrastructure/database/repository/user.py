@@ -11,7 +11,7 @@ class UserRepository(BaseRepository[User]):
         await self.session.refresh(user)
         return user
     
-    async def get_user(self, email) -> User:
+    async def get_user(self, email: str) -> User:
         query = select(User).where(User.email == email)
         result = await self.session.execute(query)
-        return result.scalar_one_or_none() 
+        return result.scalar_one_or_none()
