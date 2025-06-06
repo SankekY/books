@@ -15,3 +15,16 @@ async def create_book(
     service: BookService = Depends(get_book_service)
 ) -> BookResponse:
     return await service.create_book(book_data)
+
+
+@router.get(
+    "/",
+    response_model=list[BookResponse],
+    status_code=status.HTTP_200_OK   
+)
+async def get_books(
+    offset: int = 0,
+    limit: int = 25,
+    service: BookService = Depends(get_book_service)
+) -> list[BookResponse]:
+    return await service.get_books(offset, limit) 
