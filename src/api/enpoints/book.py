@@ -29,6 +29,7 @@ async def get_books(
 ) -> list[BookResponse]:
     return await service.get_books(offset, limit) 
 
+
 @router.get(
     "/{book_id}",
     response_model=BookResponse,
@@ -39,3 +40,28 @@ async def get_book(
     service: BookService = Depends(get_book_service)
 ) -> BookResponse:
     return await service.get_book(book_id)
+
+
+@router.delete(
+    "/{book_id}",
+    response_model=BookResponse,
+    status_code=status.HTTP_200_OK
+)
+async def delete_book(
+    book_id:int,
+    service: BookService = Depends(get_book_service)
+) -> BookResponse:
+    return await service.delete_book(book_id)
+
+
+@router.put(
+    "/{book_id}",
+    response_model=BookResponse,
+    status_code=status.HTTP_201_CREATED
+)
+async def update_book(
+    book_data: BookCreate, 
+    book_id: int, 
+    service: BookService = Depends(get_book_service)
+) -> BookResponse:
+    return await service.update_book(book_data, book_id) 

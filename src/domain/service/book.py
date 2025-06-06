@@ -21,3 +21,12 @@ class BookService:
     async def get_book(self,id: int) -> BookResponse:
         book = await self.repository.get_book(id)
         return BookResponse.from_orm(book)
+
+    async def delete_book(self, book_id: int) -> BookResponse:
+        return await self.repository.delete_book()
+
+    async def update_book(self, book_data: BookCreate, book_id: int) -> BookResponse:
+        return await self.update_book(
+            book_data=book_data.dict(),
+            book_id=book_id
+        )
