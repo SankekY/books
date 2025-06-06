@@ -17,3 +17,8 @@ class BookRepository(BaseRepository[Book]):
         ).offset(offset).limit(limit)
         books = await self.session.execute(qery)
         return books.scalars().all()
+    
+    async def get_book(self, id: int) -> Book:
+        stmt = select(Book).where(Book.id == id)
+        book = await self.session.execute(stmt)
+        return book.scalar_one()

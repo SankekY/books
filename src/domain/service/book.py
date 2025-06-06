@@ -17,3 +17,7 @@ class BookService:
                 BookResponse.from_orm(book)
             )
         return book_list
+    
+    async def get_book(self,id: int) -> BookResponse:
+        book = await self.repository.get_book(id)
+        return BookResponse.from_orm(book)

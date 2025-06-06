@@ -28,3 +28,14 @@ async def get_books(
     service: BookService = Depends(get_book_service)
 ) -> list[BookResponse]:
     return await service.get_books(offset, limit) 
+
+@router.get(
+    "/{book_id}",
+    response_model=BookResponse,
+    status_code=status.HTTP_200_OK
+)
+async def get_book(
+    book_id: int,
+    service: BookService = Depends(get_book_service)
+) -> BookResponse:
+    return await service.get_book(book_id)
