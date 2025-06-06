@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 from domain.schems.book import BookCreate, BookResponse
 from domain.service.book import BookService
 from api.deps import get_book_service
+
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
@@ -51,8 +52,17 @@ async def delete_book(
     book_id:int,
     service: BookService = Depends(get_book_service)
 ) -> BookResponse:
-    return await service.delete_book(book_id)
-
+    try:
+        await service.delete_book(book_id)
+        return {
+            "sucsses": True,
+            "message": "book is detele!"
+        }
+    except:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Book with ID not found!"
+        )
 
 @router.put(
     "/{book_id}",

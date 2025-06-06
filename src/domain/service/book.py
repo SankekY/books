@@ -23,10 +23,10 @@ class BookService:
         return BookResponse.from_orm(book)
 
     async def delete_book(self, book_id: int) -> BookResponse:
-        return await self.repository.delete_book()
+        return await self.repository.delete_book(book_id)
 
     async def update_book(self, book_data: BookCreate, book_id: int) -> BookResponse:
-        return await self.update_book(
+        return await self.repository.update_book(
             book_data=book_data.dict(),
             book_id=book_id
         )

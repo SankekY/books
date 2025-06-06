@@ -27,19 +27,21 @@ class BookRepository(BaseRepository[Book]):
         query = delete(Book).where(Book.id == book_id)
         result =  await self.session.execute(query)
         await self.session.commit()
-        return result.scalar_one()
 
-    async def update_book(self, book_data: dict, book_id: int):
-        book = Book(**book_data)
-        exists_query = select(exists().where(Book.id == book_id))
-        result = await self.session.execute(exists_query)
-        if not result.scalar():
+    async def update_book(self, book_data: dict, book_id: int) -> Book:
+        # Получаем книгу
+        query = select(Book).where(Book.id == book_id)
+        result = await self.session.execute(query)
+        book = result.scalars().first()
+        
+        if not book:
             raise ValueError(f"Book with ID: {book_id} not found!")
         
-        update_query = update(Book).where(Book.id == book_id).values(**book_data)
-        await self.session.execute(update_query)
+        # Обновляем атрибуты
+        for key, value in book_data.items():
+            setattr(book, key, value)
+        
+        # Сохраняем изменения
         await self.session.commit()
-
-        querty = select(Book).where(Book.id == id)
-        result = await self.session.execute(querty)
-        return result.scalar_one()
+        await self.session.refresh(book)
+        return book
