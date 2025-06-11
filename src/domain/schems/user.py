@@ -23,3 +23,21 @@ class UserLogInSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserSchemaResponse(BaseModel):
+    name: str = Field(..., description="User Name")
+    email: EmailStr = Field(..., description="Youre Email")
+    phone_number: str = Field(..., description="+7 000 000 00 00")
+
+    class Config:
+        from_attributes = True
+        
+class Token(BaseModel):
+    access_token: str  # Сам JWT-токен
+    token_type: str    # Тип токена (обычно "bearer")
+
+class TokenData(BaseModel):
+    sub: str | None = None
+    expire: int | None = None 
+    email: str | None = None  # Данные внутри токена (в данном случае только username)

@@ -11,7 +11,7 @@ async def auth_middleware(request: Request, call_next):
         )
     try:
         token = request.headers.get("Authorization")
-        pass
+        call_next()
     except HTTPException as e:
         return JSONResponse(
             content={
