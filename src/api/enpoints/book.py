@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from domain.schems.book import BookCreate, BookResponse 
 from domain.service.book import BookService
+from domain.schems.user import TokenData, Token
 from api.deps import get_book_service
 from typing import Annotated
+from api.deps import get_current_user
 
 router = APIRouter(prefix="/books", tags=["Books"])
 
@@ -15,9 +17,9 @@ router = APIRouter(prefix="/books", tags=["Books"])
 )
 async def create_book(
     book_data: BookCreate,
+    user_data: TokenData = Depends(get_current_user),
     service: BookService = Depends(get_book_service)
 ) -> BookResponse:
-    print(token['token'])
     return await service.create_book(book_data)
 
 
@@ -29,7 +31,8 @@ async def create_book(
 async def get_books(
     offset: int = 0,
     limit: int = 25,
-    service: BookService = Depends(get_book_service)
+    service: BookService = Depends(get_book_service),
+    user_data: TokenData = Depends(get_current_user)
 ) -> list[BookResponse]:
     return await service.get_books(offset, limit) 
 
@@ -41,7 +44,8 @@ async def get_books(
 )
 async def get_book(
     book_id: int,
-    service: BookService = Depends(get_book_service)
+    service: BookService = Depends(get_book_service),
+    user_data: TokenData = Depends(get_current_user)
 ) -> BookResponse:
     return await service.get_book(book_id)
 

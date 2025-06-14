@@ -3,12 +3,11 @@ from domain.schems.user import UserSchema, UserLogInSchema, Token, TokenData, Us
 from api.deps import get_user_service
 from domain.service.user import UserService
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from domain.auth.user import  create_access_token, decode_jwt_token, get_current_user
+from domain.auth.user import  create_access_token
+from api.deps import get_current_user
 from config.settings import config
 from datetime import timedelta
 
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 router = APIRouter(
     prefix="/auth",
@@ -36,24 +35,24 @@ async def register_user(
     )
 
 
-@router.post(
-    "/login",
-    status_code=status.HTTP_200_OK
-)
-async def login_user(
-    user_data: UserLogInSchema,
-    service: UserService = Depends(get_user_service)
-) -> Token:
-    token = await service.login_user(user_data)
-    if not token:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Не верный логин или пороль!"
-        )
-    return Token(
-        access_token=token,
-        token_type="Bearer"
-    )
+# @router.post(
+#     "/login",
+#     status_code=status.HTTP_200_OK
+# )
+# async def login_user(
+#     user_data: UserLogInSchema,
+#     service: UserService = Depends(get_user_service)
+# ) -> Token:
+#     token = await service.login_user(user_data)
+#     if not token:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="Не верный логин или пороль!"
+#         )
+#     return Token(
+#         access_token=token,
+#         token_type="Bearer"
+#     )
 
 @router.post(
     "/token",
